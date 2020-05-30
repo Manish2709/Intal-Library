@@ -1,0 +1,133 @@
+DESIGN AND ANALYSIS OF ALGORITHMS UE18CS251 MINI-PROJECT REPORT
+
+
+INTRODUCTION TO INTEGERS OF ARBITRARY LENGTH(INTAL):
+	
+	An intal is an integer value of arbitrary length stored in the form of a character array containing the ASCII values of '0' to '9' where its most significant digit is at the 0th index of the character array i.e. in big endian style. An intal does not contain any leading zeroes.
+	The motivation behind the use of an intal is that even on use of long long int the maximum value that can be stored for an integer would only be as big as approximately 10^20. In C an integer value is assigned 4 bytes usually(value may differ). However an intal can store as much data as requires because the character array size is not limited. Hence it can store very large values that an integer cannot store or small values which would by a waste of space if stored as an int or short.
+	This finds application in many fields where precise calculations of large numbers are required where approximations(such as artificial limits) or error due to overflow that may lead to incorrect results. For example, public-key cryptography algorithms employ arithmetic with integers having hundereds of digits. Another application of intal is in checking the results of fixed-precision calculations. It is also useful for determining optimal or near-optimal values for coefficients needed in formulae, for example the 1/squareroot(3) that appears in Gaussian integration. Intal with certain modifications can be used to represent BASE-128 numbers
+
+
+FUNCTIONS IMPLEMENTED:
+
+1)ADDITION
+	- Adds two intals taken as input by taking each digit from the least significant bit to the most significant digit of the intals and finding their sum by converting the characters into integers. 
+	- We compute the sum by adding the digits of each number and the carry, we then calculate the carry for the next step, after doing the above operation we add the remaining digits of the larger number with the carry.
+	- The leading zeros are removed by shifting the result obtained accordingly.
+
+2)COMPARISON:
+	- First compares the length of the two intals. If the first intal is longer than the second returns 1 else returns -1.
+	- If the lengths are equal then the function goes on to compare the intals character by character from left to right. If the character of the first intal is greater than the second it returns 1, if lesser it returns -1.
+	- If all the characters are also the same then the function returns 0.
+
+3)DIFFERENCE:
+	- Finds the difference between two intals. So that the difference is positive the copies of the two intals are swapped if the first intal is lesser than the second.
+	- Goes from the least significant digit to the most significant digit and the difference is stored in the appropriate index position from the rightmost digit to the left.
+	- The difference digit is calculated as the first intal digit minus the second intal digit if the first digit is greater than the second. If not, 10 is added to the first digit and the difference is computed. This makes the carry value one. Else carry is 0. The carry is always subtracted when calculating the difference but it doesn't matter when the digit of the first intal is greater than the second.
+	- The leading zeroes are removed by shifting accordingly.
+
+4)MULTIPLICATION
+	- The product is found by calculating subproducts of each intal.
+	- We go from right to left in intal1 and we multiply the current digit of the first and second number and add the result to the previously stored result at the current position
+	- We the calculate the carry for each iteration and repeat the above mentioned step
+	- We remove any leading zeros which might have been added to the result while multiplying.
+	- Follows naive multiplication with O(mn) complexity.
+
+5)MODULUS:
+	- Finds remainder using long division method.
+	- Portions of the dividend i.e. the first intal as long as the divisor i.e. the second intal are compared with the divisor value.
+	- If it is lesser than the divisor then 0 is appended to the beginning of the next comparison portion else the divisor is continuously subtracted from the portion of the dividend till it is lesser than the divisor.
+	- This process is repeated till all portions of the dividend is covered. The result obtained over repeated subtraction at that point is the remainder.
+
+6)POWER:
+	- Follows a divide and conquer method for calculation the power in a n iterative manner.
+	- This way we avoid large stack trace and effectively manage memory.
+
+7)GCD:
+	- Follows the iterative version of the following algorithm to find the GCD of two numbers.
+	- ALGORITHM:
+  		gcd(a,b):
+    			if a = 0:
+      				return b
+    		gcd(b mod a, a);
+
+8) nth FIBONACCI NUMBER:
+	- Calculated using the dynamic programming approach.
+	- First two fibonacci numbers are 0 and 1. These are given.
+	- For next few values of n, Fibonacci[n]=Fibonacci[n-1]+Fibonacci[n-2]. This is found for each number from 2 to n by applying this operation in a for loop.
+	- LOGIC:
+	  F(0) = Intal(0)
+  	  F(1) = Intal(1)
+  	  F(n) = F(n - 1) + F(n - 2)
+
+9) FACTORIAL:
+	- Calculates the factorial of a number by taking the previous factorial value and multiplying the number with each digit. This is stored as an integer array. The base factorial value is 1 which is for 0!.
+	- Only one's place digit from answer obtained replaces the integer value as an integer in the respective position in the array. If the product of the digit with respective previous factorial value digit is greater then 9 carry generated is added in the next multiplication for the product.
+	- After n factorial is calculated in the form of the integer array. Each integer in the integer array is converted to character and put in the same index in a character array forming the result intal.
+
+10)BINOMIAL COEFFICIENT:
+	- Binomial coefficient using bottoms up approach using memoization where:
+	- LOGIC:
+  		C(n,k) = C(n-1,k) + C(n-1,k-1)
+  		C(n,0) = 1
+  		C(n,1) = n
+  		We know that C(n,k) depends on C(n-1,k) and C(n-1,k-1)
+  		We compute C(1,0), C(1,1) first then C(2,0), C(2,1) and C(2,2) using C(1,0), C(1,1). We build up this until C(n, k)
+  		Given C(n + 1, x) only depends on C(n, y), we need O(n) extra space
+
+11) MAXIMUM:
+	- Assumes that the the first element is the maximum element.
+	- Traverses throught the complete array.
+	- Each time an element is encountered which is greater than the assumed maximum, it becomes the new assumed maximum.
+	- Index of final assumed maximum is returned.
+
+12) MINIMUM:
+	- Assumes that the the first element is the minimum element.
+	- Traverses throught the complete array.
+	- Each time an element is encountered which is lesser than the assumed minimum, it becomes the new assumed minimum.
+	- Index of final assumed minimum is returned.
+
+13) LINEAR SEARCH:
+	- Assumed that key is not found i.e. index to be returned is -1.
+	- Traverses through the entire array.
+	- If the key is found then control comes out of the traversal and returns the index.
+
+14) BINARY SEARCH:
+	- Assumes array to be sorted.
+	- Have implemented using recursion with the array length varying depending on the results obtained by comparing the middle value of the array segment with the key.
+	- If the middle value is lesser than key then the middle value index plus 1 as the beginning of the array segment that the key needs to be searched for else middle value index minus 1 is the end of the array segment that the key will lie in.
+	- The base case is where the middle value and the key are the same.  
+
+15) MERGE SORT:
+	- One function is used to divide the problem into two subproblems. And merge them.
+	- One function is used to order the elements in each subproblem the basic case being that an array with one element is considered sorted.
+	- This is implementented recursively.
+
+16) COIN ROW PROBLEM:
+	- This is solved using the dynamic programming approach.
+	- The basic case being that in an if there is only a coin of a particular value then it is the optimum value.
+	- For the nth type of coin it's effect with the optimum value is checked. If it is greater than the optimum value obtained in the previous case it is updated else the previous optimum value is maintained.
+	- LOGIC:
+	  CR(0) = 0
+	  CR(1) = Coin[1]
+	  CR(n) = MAX(CR(n - 1), Coin[n] + CR(n - 2));
+
+OTHER FUNCTIONS THAT COULD BE INCLUDED:
+	*Division of two intal numbers, provided we can handle the case of large numbers as the program could crash due to stack overflow.
+	*To check whether a given intal is prime or not.
+	*Bitwise operations such as and, or, not, xor, right shift, left shift, etc.
+
+
+APPLICATIONS OF INTAL CAN BE EXTENDED TO:
+	*Polynomial representation and it's operations and applications
+	*Bitwise representation for large strings and their functionalities.
+
+
+IMPROVEMENTS IF NONE OF THE RESTRICTIONS WERE IMPOSED:
+	*Extending the representation of intal to negative numbers so that subtraction becomes much easier.
+	*A linked list representation of intal could be an idea which could be further explored upon.
+	*We could use raw pointers and shift operations to make the implementation better.
+
+
+		
+
